@@ -5,6 +5,11 @@ from constants import * #import everything from constants file... * means everyt
 from player import Player
 
 def main():
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
+    Player.containers = (updatable,drawable)
+
     print("Starting asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
@@ -28,10 +33,18 @@ def main():
         #fill(color, rect=None, special_flags=0) -> rect
         screen.fill(color = (0,0,0))#000000
         print("About to draw player")  # Add this debug line
-        player.draw(screen)
+
+        for sprite in updatable:
+            sprite.update(dt)
+            #player.update(dt)
+        
+        for sprite in drawable:
+            sprite.draw(screen)
+            #player.draw(screen)
+            
         pygame.display.flip() #refreshes the screen
 
-        dt = (clock.tick(60))/1000 #Storing the delta time in seconds
+        dt = (clock.tick(60))/1000 ## limit the framerate to 60 FPS
 
 
 if __name__ == "__main__":
