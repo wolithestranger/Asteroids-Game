@@ -1,8 +1,12 @@
 import pygame
+import sys
 
 from constants import * #import everything from constants file... * means everything
 #from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
+from shot import Shot
 
 def main():
     updatable = pygame.sprite.Group()
@@ -24,6 +28,15 @@ def main():
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) 
 
+    asteroids = pygame.sprite.Group()
+    Asteroid.containers = (asteroids,updatable,drawable)
+    AsteroidField.containers = (updatable,)
+    asteroid_field = AsteroidField()
+
+    shots = pygame.sprite.Group()
+    Shot.containers = (shots, updatable, drawable)
+    
+    #main game loop
     while True:
         #This will check if the user has closed the window and exit the game loop if they do. It will make the window's close button work.
         for event in pygame.event.get():
@@ -37,11 +50,17 @@ def main():
         for sprite in updatable:
             sprite.update(dt)
             #player.update(dt)
+
+        for asteroid in asteroids:
+            if asteroid.collision_check(player):
+                print("Game Over")
+                sys.exit()
+                #SystemExit
         
         for sprite in drawable:
             sprite.draw(screen)
             #player.draw(screen)
-            
+
         pygame.display.flip() #refreshes the screen
 
         dt = (clock.tick(60))/1000 ## limit the framerate to 60 FPS
