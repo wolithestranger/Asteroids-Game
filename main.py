@@ -51,11 +51,20 @@ def main():
             sprite.update(dt)
             #player.update(dt)
 
+        #collision checks
         for asteroid in asteroids:
-            if asteroid.collision_check(player):
+            if asteroid.collision_check(player):# if player collides with asteroid
                 print("Game Over")
                 sys.exit()
                 #SystemExit
+
+        #couuld just put this for loop within asteroid for loop. so one nested loop
+        for asteroid in asteroids:# shot destroys asteroids
+            for shot in shots:
+                if asteroid.collision_check(shot):
+                    shot.kill()# bullet is killed after asteroid is destroyed
+                    asteroid.split(asteroids)
+
         
         for sprite in drawable:
             sprite.draw(screen)
